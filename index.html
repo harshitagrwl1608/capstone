@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PeerPath – Campus Peer Skill-Exchange Platform</title>
+  <meta name="description" content="A campus-focused peer skill-exchange web application letting college students trade knowledge instead of money. B.Tech Capstone Project by Inderpal Singh.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       AUTHENTICATION SCREEN (LOGIN & SELF-REGISTRATION REQUEST)
+       Visible when user is not authenticated
+       ========================================================================== -->
+  <div class="auth-wrapper" id="authContainer">
+    <div class="auth-header-top">
+      <button class="theme-toggle-btn" id="authThemeToggleBtn" title="Toggle Theme" aria-label="Toggle theme">
+        <span class="theme-icon-indicator">☀️</span>
+      </button>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-brand-block">
+        <div class="auth-brand-icon">🎓</div>
+        <h1>PeerPath</h1>
+        <p>Campus Skill-Exchange Portal &bull; J.C. Bose UST, YMCA Faridabad</p>
+      </div>
+
+      <!-- Sign In vs Self-Registration Tabs -->
+      <div class="auth-tabs-toggle" role="tablist">
+        <button class="auth-tab-btn tab-active" id="authTabSignIn" role="tab" aria-selected="true">
+          Sign In
+        </button>
+        <button class="auth-tab-btn" id="authTabRegister" role="tab" aria-selected="false">
+          Request Registration
+        </button>
+      </div>
+
+      <!-- SIGN IN FORM -->
+      <div id="signInFormContainer">
+        <div id="loginSuccessNotice" class="auth-notice-alert" style="display: none;"></div>
+        <div id="loginPendingNotice" style="display: none;"></div>
+        <div id="loginErrorBox" class="auth-error-alert" style="display: none;"></div>
+
+        <form id="loginForm">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="loginEmail" class="form-label">Campus Email Address:</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="e.g. inderpal.it@jcboseust.ac.in" required autocomplete="email">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 22px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <label for="loginPassword" class="form-label">Password:</label>
+              <span class="text-xs text-muted">Demo: <code>peerpath123</code></span>
+            </div>
+            <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+            Sign In to PeerPath
+          </button>
+        </form>
+
+        <!-- Quick Demo Accounts (For Evaluator & Demo Conveniences) -->
+        <div class="quick-demo-section">
+          <div class="quick-demo-title">Quick Demo Logins (Click to autofill & sign in):</div>
+          <div class="quick-demo-chips">
+            <button type="button" class="quick-demo-chip" onclick="PeerPathAuth.quickDemoLogin('inderpal.it@jcboseust.ac.in', 'peerpath123')">
+              👤 Inderpal Singh (Student)
+            </button>
+            <button type="button" class="quick-demo-chip" onclick="PeerPathAuth.quickDemoLogin('aarav.ce@jcboseust.ac.in', 'peerpath123')">
+              👤 Aarav Sharma (Student)
+            </button>
+            <button type="button" class="quick-demo-chip" onclick="PeerPathAuth.quickDemoLogin('priya.dtu@gmail.com', 'peerpath123')">
+              👤 Priya Patel (Student)
+            </button>
+            <button type="button" class="quick-demo-chip admin-chip" onclick="PeerPathAuth.quickDemoLogin('admin@peerpath.edu', 'admin123')">
+              🛡️ Admin Moderator
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SELF-REGISTRATION FORM (Requires Admin Approval) -->
+      <div id="registerFormContainer" style="display: none;">
+        <p class="text-secondary text-xs" style="margin-bottom: 16px; line-height: 1.5;">
+          📝 Submit your details for campus skill-exchange membership. <strong>Your registration request will be sent to the campus Administrator for verification and approval</strong> before you can log in.
+        </p>
+
+        <div id="regErrorBox" class="auth-error-alert" style="display: none;"></div>
+
+        <form id="registrationForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regName" class="form-label">Full Name *</label>
+              <input type="text" id="regName" class="form-input" placeholder="e.g. Sahil Kapoor" required>
+            </div>
+            <div class="form-group">
+              <label for="regRollNumber" class="form-label">College Roll Number *</label>
+              <input type="text" id="regRollNumber" class="form-input" placeholder="e.g. 25001011089" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regCollege" class="form-label">College / University *</label>
+              <input type="text" id="regCollege" class="form-input" value="J.C. Bose UST, YMCA Faridabad" required>
+            </div>
+            <div class="form-group">
+              <label for="regBranch" class="form-label">Branch / Department *</label>
+              <input type="text" id="regBranch" class="form-input" placeholder="Information Technology" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regYear" class="form-label">Academic Year *</label>
+              <select id="regYear" class="form-select">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year" selected>3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Postgraduate">Postgraduate</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="regAvailability" class="form-label">Campus Availability</label>
+              <input type="text" id="regAvailability" class="form-input" placeholder="e.g. Weekdays 5:00 PM - 7:00 PM">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regEmail" class="form-label">Campus Email *</label>
+              <input type="email" id="regEmail" class="form-input" placeholder="sahil@jcboseust.ac.in" required>
+            </div>
+            <div class="form-group">
+              <label for="regPassword" class="form-label">Choose Password *</label>
+              <input type="password" id="regPassword" class="form-input" placeholder="At least 6 characters" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills You Can Teach (Up to 2 Skills) *</label>
+            <div class="form-row">
+              <input type="text" id="regTeach1" class="form-input" placeholder="Skill 1 (e.g. Python)" required>
+              <input type="text" id="regTeach2" class="form-input" placeholder="Skill 2 (e.g. OpenCV)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills You Want to Learn (Up to 2 Skills) *</label>
+            <div class="form-row">
+              <input type="text" id="regLearn1" class="form-input" placeholder="Skill 1 (e.g. React.js)" required>
+              <input type="text" id="regLearn2" class="form-input" placeholder="Skill 2 (e.g. Video Editing)">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="regBio" class="form-label">Short Bio / Peer Statement</label>
+            <textarea id="regBio" class="form-textarea" rows="2" placeholder="Tell peers what you hope to learn or achieve on campus..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+            Submit Registration Request to Admin
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       MAIN APPLICATION (Visible when user is authenticated)
+       ========================================================================== -->
+  <div id="appContainer" style="display: none;">
+
+    <!-- Main Navigation Bar -->
+    <nav class="main-navbar" aria-label="Main Navigation">
+      <div class="navbar-container">
+        <div class="nav-brand" onclick="PeerPathApp.switchTab('discovery')" role="button" tabindex="0">
+          <div class="brand-icon">🎓</div>
+          <div class="brand-text">
+            <h1>PeerPath</h1>
+            <p class="brand-subtitle">Campus Skill Exchange</p>
+          </div>
+        </div>
+
+        <div class="nav-tabs" role="tablist">
+          <button class="nav-tab-btn nav-active" data-tab="discovery" id="navBtnDiscovery" role="tab" aria-selected="true">
+            Browse Peers
+          </button>
+          <button class="nav-tab-btn" data-tab="sessions" id="navBtnSessions" role="tab" aria-selected="false">
+            My Sessions
+            <span class="nav-badge-pill" id="sessionNotificationBadge" style="display: none;">0</span>
+          </button>
+          <button class="nav-tab-btn" data-tab="profile" id="navBtnProfile" role="tab" aria-selected="false">
+            My Profile
+          </button>
+          <!-- Admin Panel Tab: Visible ONLY to Admin users -->
+          <button class="nav-tab-btn" data-tab="admin" id="navBtnAdmin" role="tab" aria-selected="false" style="display: none;">
+            Admin Panel
+          </button>
+        </div>
+
+        <div class="nav-right-actions">
+          <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+            <span class="theme-icon-indicator">☀️</span>
+          </button>
+
+          <div class="user-profile-badge" id="navUserBadge" onclick="PeerPathApp.switchTab('profile')" title="View Active Profile">
+            <div class="user-avatar-circle" id="currentUserAvatar">IS</div>
+            <div class="user-badge-details">
+              <span class="user-badge-name" id="currentUserName">Inderpal Singh</span>
+              <span class="user-badge-role" id="currentUserRoleBadge">IT • 4th Year</span>
+            </div>
+          </div>
+
+          <button class="btn-nav-logout" onclick="PeerPathAuth.logout()" title="Log out">
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Incoming Request / Admin Review Alert Banner -->
+    <aside class="notification-banner" id="pendingRequestsBanner" aria-live="polite">
+      <!-- Populated dynamically by auth.js -->
+    </aside>
+
+    <!-- Main View Router Container -->
+    <main class="app-main">
+
+      <!-- VIEW 1: DISCOVERY FEED -->
+      <section class="view-section view-active" id="view_discovery" aria-label="Discovery Feed">
+        <div class="discovery-hero">
+          <div class="hero-banner">
+            <div class="hero-content">
+              <span class="hero-tag">J.C. Bose UST, YMCA Faridabad</span>
+              <h2 class="hero-title">Peer Skill Exchange Platform</h2>
+              <p class="hero-desc">
+                Find campus peers with complementary skills, book 1-hour exchange sessions, and collaborate directly without any fees.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-filter-section">
+          <div class="search-bar-box">
+            <span class="search-icon-svg">🔍</span>
+            <input type="text" id="discoverySearchInput" class="search-bar-input" placeholder="Search peers by name, college, skill (e.g. Python, React, Video Editing, C++)..." aria-label="Search peers">
+          </div>
+
+          <div class="category-chips-row" id="categoryChipsContainer" aria-label="Filter by skill">
+            <!-- Populated by discovery.js -->
+          </div>
+        </div>
+
+        <div class="feed-header-info">
+          <h3 class="feed-header-title">Campus Peer Network</h3>
+          <span class="feed-count-badge" id="discoveryCountBadge">Loading peers...</span>
+        </div>
+
+        <div class="peers-grid" id="discoveryGrid">
+          <!-- Peer cards populated dynamically by discovery.js -->
+        </div>
+
+        <div class="empty-state" id="discoveryEmptyState" style="display: none;">
+          <span class="empty-state-icon">🔎</span>
+          <h3>No peers found</h3>
+          <p>Try clearing your search query or selecting "All" skill categories.</p>
+        </div>
+      </section>
+
+      <!-- VIEW 2: MY SESSIONS -->
+      <section class="view-section" id="view_sessions" aria-label="My Sessions">
+        <div class="feed-header-info">
+          <div>
+            <h2 class="feed-header-title">My Skill Exchange Sessions</h2>
+            <p class="brand-subtitle">Manage incoming requests, join confirmed Jitsi video meetings, and rate your peers.</p>
+          </div>
+        </div>
+
+        <div class="sessions-tabs-nav" role="tablist">
+          <button class="session-tab-btn tab-active" data-filter="all" onclick="PeerPathSessions.setFilter('all')">
+            All Sessions <span class="tab-count-badge" id="countAllSessions">0</span>
+          </button>
+          <button class="session-tab-btn" data-filter="pending" onclick="PeerPathSessions.setFilter('pending')">
+            Pending Requests <span class="tab-count-badge" id="countPendingSessions">0</span>
+          </button>
+          <button class="session-tab-btn" data-filter="confirmed" onclick="PeerPathSessions.setFilter('confirmed')">
+            Confirmed & Ready <span class="tab-count-badge" id="countConfirmedSessions">0</span>
+          </button>
+          <button class="session-tab-btn" data-filter="completed" onclick="PeerPathSessions.setFilter('completed')">
+            Completed <span class="tab-count-badge" id="countCompletedSessions">0</span>
+          </button>
+        </div>
+
+        <div class="sessions-list-container" id="sessionsListContainer">
+          <!-- Rendered by sessions.js -->
+        </div>
+
+        <div class="empty-state" id="sessionsEmptyState" style="display: none;">
+          <span class="empty-state-icon">📅</span>
+          <h3>No sessions found in this category</h3>
+          <p>Browse peers in the discovery feed to request a 1-hour skill exchange!</p>
+        </div>
+      </section>
+
+      <!-- VIEW 3: MY PROFILE -->
+      <section class="view-section" id="view_profile" aria-label="My Profile">
+        <div class="profile-card-large">
+          <div class="profile-top-banner">
+            <div class="profile-header-group">
+              <div class="profile-avatar-large" id="profileViewAvatar">IS</div>
+              <div class="profile-title-info">
+                <h2 id="profileViewName">Inderpal Singh</h2>
+                <p class="text-secondary" id="profileViewCollege">J.C. Bose UST, YMCA Faridabad</p>
+                <p class="text-muted text-xs" id="profileViewBranchYear">Information Technology • 4th Year</p>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="PeerPathAuth.openEditProfileModal()">
+              ✏️ Edit Profile & Skills
+            </button>
+          </div>
+
+          <div class="profile-grid-details">
+            <div class="profile-info-block">
+              <div class="profile-block-label">Skills I Can Teach (Max 2)</div>
+              <div class="skill-tags" id="profileSkillsTeach"></div>
+            </div>
+
+            <div class="profile-info-block">
+              <div class="profile-block-label">Skills I Want To Learn (Max 2)</div>
+              <div class="skill-tags" id="profileSkillsLearn"></div>
+            </div>
+
+            <div class="profile-info-block">
+              <div class="profile-block-label">Campus Availability</div>
+              <p id="profileViewAvailability" class="text-main">Mon, Wed, Fri (5:00 PM - 7:00 PM)</p>
+            </div>
+
+            <div class="profile-info-block">
+              <div class="profile-block-label">Contact / College Email</div>
+              <p id="profileViewEmail" class="text-main">inderpal.it@jcboseust.ac.in</p>
+            </div>
+          </div>
+
+          <div class="profile-info-block" style="margin-bottom: 24px;">
+            <div class="profile-block-label">About Me & Academic Goals</div>
+            <p id="profileViewBio" class="text-secondary"></p>
+          </div>
+
+          <div class="profile-stats-row">
+            <div class="profile-stat-box">
+              <div class="profile-stat-val" id="profileViewRating">★ 4.9</div>
+              <div class="profile-stat-label">Peer Rating Score</div>
+            </div>
+            <div class="profile-stat-box">
+              <div class="profile-stat-val" id="profileStatSessions">0</div>
+              <div class="profile-stat-label">Total Sessions Booked</div>
+            </div>
+            <div class="profile-stat-box">
+              <div class="profile-stat-val" id="profileStatExchanges">0</div>
+              <div class="profile-stat-label">Completed Barters</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: ADMIN PANEL (Protected - Administrator Only) -->
+      <section class="view-section" id="view_admin" aria-label="Admin Dashboard">
+        <div class="feed-header-info">
+          <div>
+            <h2 class="feed-header-title">Platform Administration & Campus Moderation</h2>
+            <p class="brand-subtitle">Platform metrics, student registration approvals, and user moderation</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary btn-sm" onclick="PeerPathAdmin.openAddStudentModal()">
+              ➕ Add Campus Student
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="PeerPathData.resetAllData()">
+              ↺ Reset All Data
+            </button>
+          </div>
+        </div>
+
+        <!-- Platform Analytics Metrics -->
+        <div class="admin-metrics-grid">
+          <div class="admin-metric-card">
+            <div class="metric-number" id="adminTotalStudents">0</div>
+            <div class="metric-label">Registered Students</div>
+          </div>
+          <div class="admin-metric-card metric-highlight">
+            <div class="metric-number" id="adminPendingRegistrations" style="color: #fbbf24;">0</div>
+            <div class="metric-label">Pending Registrations</div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="metric-number" id="adminTotalSessions">0</div>
+            <div class="metric-label">Total Sessions Created</div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="metric-number" id="adminConfirmedSessions">0</div>
+            <div class="metric-label">Confirmed Video Calls</div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="metric-number" id="adminCompletedSessions">0</div>
+            <div class="metric-label">Completed Barters</div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="metric-number" id="adminAvgRating">★ 4.9</div>
+            <div class="metric-label">Platform Avg Rating</div>
+          </div>
+          <div class="admin-metric-card">
+            <div class="metric-number" id="adminUniqueSkills">0</div>
+            <div class="metric-label">Teachable Skills Listed</div>
+          </div>
+        </div>
+
+        <!-- SECTION: PENDING STUDENT REGISTRATIONS -->
+        <div class="admin-section-block">
+          <div class="admin-section-header">
+            <h3>
+              <span>📋</span> Pending Campus Registration Requests
+              <span class="badge-action-alert" id="adminPendingBadge" style="display: none;">Action Required</span>
+            </h3>
+            <span class="text-xs text-muted">Students who submitted registration requests requiring admin verification</span>
+          </div>
+
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Applicant Student</th>
+                  <th>College & Branch</th>
+                  <th>Skills to Teach</th>
+                  <th>Skills to Learn</th>
+                  <th>Request Info</th>
+                  <th>Admin Decision</th>
+                </tr>
+              </thead>
+              <tbody id="adminRegRequestsTableBody">
+                <!-- Populated dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="empty-state" id="adminRegEmptyState" style="display: none; padding: 30px;">
+            <span class="empty-state-icon">✓</span>
+            <h3>No Pending Registrations</h3>
+            <p>All student self-registration applications have been reviewed.</p>
+          </div>
+        </div>
+
+        <!-- SECTION: REGISTERED STUDENTS DIRECTORY -->
+        <div class="admin-section-block">
+          <div class="admin-section-header">
+            <h3><span>👥</span> Registered Campus Students Directory</h3>
+            <span class="text-xs text-muted">Active students in the PeerPath campus network</span>
+          </div>
+
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>College & Branch</th>
+                  <th>Teaches</th>
+                  <th>Wants To Learn</th>
+                  <th>Rating</th>
+                  <th>Sessions</th>
+                  <th>Moderation</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTableBody">
+                <!-- Populated dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div>
+          <strong>PeerPath</strong> &mdash; Campus Peer Skill-Exchange Platform
+        </div>
+        <div class="footer-author">
+          Peer-to-Peer Learning Network &bull; J.C. Bose UST, YMCA Faridabad (Inderpal Singh • 25001011020)
+        </div>
+        <div style="margin-top: 6px;">
+          <button type="button" class="btn-text-muted" onclick="if(confirm('Reset all demo data back to default?')) PeerPathData.resetAllData()" style="background: none; border: none; font-size: 0.72rem; color: var(--text-muted); cursor: pointer; text-decoration: underline;">
+            ↺ Reset Demo State
+          </button>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+
+  <!-- ==========================================================================
+       MODALS
+       ========================================================================== -->
+
+  <!-- MODAL 1: SESSION REQUEST MODAL -->
+  <div class="modal-overlay" id="sessionRequestModal" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="requestModalTitle">Request 1-Hour Skill Exchange</h3>
+        <button class="modal-close-btn" onclick="PeerPathSessions.closeRequestModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="sessionRequestForm" onsubmit="PeerPathSessions.submitRequest(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Peer You Are Connecting With:</label>
+            <div style="font-weight: 700; font-size: 1.05rem;" id="requestModalPeerName">Peer Name</div>
+            <div class="text-muted text-xs" id="requestModalPeerCollege">College & Branch</div>
+          </div>
+
+          <div class="form-group">
+            <label for="requestSkillSelect" class="form-label">Skill to Learn from Peer:</label>
+            <select id="requestSkillSelect" class="form-select" required></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="requestDateInput" class="form-label">Preferred Date:</label>
+              <input type="date" id="requestDateInput" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="requestTimeInput" class="form-label">Preferred Time:</label>
+              <input type="time" id="requestTimeInput" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="requestNoteInput" class="form-label">Message / Topics to Cover:</label>
+            <textarea id="requestNoteInput" class="form-textarea" rows="3" placeholder="Explain what you hope to learn and what skill you can share in return..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="PeerPathSessions.closeRequestModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Send Session Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: PEER DETAILS MODAL -->
+  <div class="modal-overlay" id="peerDetailsModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Student Profile</h3>
+        <button class="modal-close-btn" onclick="PeerPathDiscovery.closePeerDetailsModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="peer-card-header">
+          <div class="peer-avatar" id="modalPeerAvatar">IS</div>
+          <div class="peer-header-info">
+            <h3 class="peer-name" id="modalPeerName">Student Name</h3>
+            <p class="peer-meta" id="modalPeerCollege">College Name</p>
+            <p class="peer-submeta" id="modalPeerBranchYear">Branch • Year</p>
+          </div>
+          <div class="peer-rating-badge" id="modalPeerRating">★ 5.0</div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">About the Student:</div>
+          <p class="text-secondary" id="modalPeerBio"></p>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">Skills They Can Teach:</div>
+          <div class="skill-tags" id="modalPeerSkillsTeach"></div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">Skills They Want to Learn:</div>
+          <div class="skill-tags" id="modalPeerSkillsLearn"></div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">Availability on Campus:</div>
+          <p class="text-main" id="modalPeerAvailability"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="PeerPathDiscovery.closePeerDetailsModal()">Close</button>
+        <button type="button" class="btn btn-primary btn-sm" id="modalPeerRequestBtn">Request Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: IN-SESSION CHAT MODAL -->
+  <div class="modal-overlay" id="chatModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog chat-dialog">
+      <div class="modal-header">
+        <div class="chat-header-user">
+          <div>
+            <h3 class="modal-title" id="chatPartnerName">Peer Chat</h3>
+            <span class="text-muted text-xs" id="chatSkillTopic">Topic</span>
+          </div>
+          <button class="btn btn-video btn-xs" id="chatQuickVideoBtn" style="display: none;">
+            🎥 Video Call
+          </button>
+        </div>
+        <button class="modal-close-btn" onclick="PeerPathChat.close()" aria-label="Close chat" style="margin-left: 12px;">&times;</button>
+      </div>
+
+      <div class="chat-messages-box" id="chatMessagesContainer">
+        <!-- Messages rendered by chat.js -->
+      </div>
+
+      <form id="chatInputForm" class="chat-input-row">
+        <input type="text" id="chatMessageInput" class="chat-text-input" placeholder="Type a message to coordinate your session..." autocomplete="off">
+        <button type="submit" class="btn btn-accent btn-sm">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: RATING MODAL (1-5 STARS) -->
+  <div class="modal-overlay" id="ratingModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Rate Your Peer Exchange</h3>
+        <button class="modal-close-btn" onclick="PeerPathRating.closeModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="ratingForm">
+        <div class="modal-body">
+          <p class="text-secondary" style="text-align: center;">
+            How was your exchange session with <strong id="ratingModalPeerName">Peer</strong> for <strong id="ratingModalSkill">Skill</strong>?
+          </p>
+
+          <div class="star-choice-container" aria-label="Select star rating from 1 to 5">
+            <span class="star-choice star-selected" data-val="1">★</span>
+            <span class="star-choice star-selected" data-val="2">★</span>
+            <span class="star-choice star-selected" data-val="3">★</span>
+            <span class="star-choice star-selected" data-val="4">★</span>
+            <span class="star-choice star-selected" data-val="5">★</span>
+          </div>
+
+          <div class="star-score-label" id="starScoreLabel">5/5 - Exceptional Peer Mentor! 🌟</div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label for="ratingCommentInput" class="form-label">Review Comment (Optional):</label>
+            <textarea id="ratingCommentInput" class="form-textarea" rows="3" placeholder="Share what was most helpful during the 1-hour session..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="PeerPathRating.closeModal()">Skip</button>
+          <button type="submit" class="btn btn-primary btn-sm">Submit Verified Rating</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: EDIT PROFILE MODAL -->
+  <div class="modal-overlay" id="editProfileModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Campus Profile & Skills</h3>
+        <button class="modal-close-btn" onclick="PeerPathAuth.closeEditProfileModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="editProfileForm" onsubmit="PeerPathAuth.saveProfileChanges(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editName" class="form-label">Full Name:</label>
+              <input type="text" id="editName" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="editCollege" class="form-label">College / University:</label>
+              <input type="text" id="editCollege" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editBranch" class="form-label">Branch / Department:</label>
+              <input type="text" id="editBranch" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="editYear" class="form-label">Academic Year:</label>
+              <select id="editYear" class="form-select">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Postgraduate">Postgraduate</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills You Can Teach (Up to 2 Skills):</label>
+            <div class="form-row">
+              <input type="text" id="editSkillTeach1" class="form-input" placeholder="e.g. Python" required>
+              <input type="text" id="editSkillTeach2" class="form-input" placeholder="e.g. Machine Learning">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills You Want to Learn (Up to 2 Skills):</label>
+            <div class="form-row">
+              <input type="text" id="editSkillLearn1" class="form-input" placeholder="e.g. React.js" required>
+              <input type="text" id="editSkillLearn2" class="form-input" placeholder="e.g. Video Editing">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editAvailability" class="form-label">Campus Availability:</label>
+            <input type="text" id="editAvailability" class="form-input" placeholder="e.g. Mon, Wed, Fri (5:00 PM - 7:00 PM)">
+          </div>
+
+          <div class="form-group">
+            <label for="editBio" class="form-label">Bio / Academic Interests:</label>
+            <textarea id="editBio" class="form-textarea" rows="2" placeholder="Briefly introduce yourself to campus peers..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="PeerPathAuth.closeEditProfileModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 6: ADD NEW STUDENT MODAL (ADMIN) -->
+  <div class="modal-overlay" id="addStudentModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">Admin: Register Campus Student</h3>
+        <button class="modal-close-btn" onclick="PeerPathAdmin.closeAddStudentModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="addStudentForm" onsubmit="PeerPathAdmin.handleAddStudentSubmit(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newStudentName" class="form-label">Student Name:</label>
+              <input type="text" id="newStudentName" class="form-input" placeholder="e.g. Rahul Gupta" required>
+            </div>
+            <div class="form-group">
+              <label for="newStudentEmail" class="form-label">Campus Email:</label>
+              <input type="email" id="newStudentEmail" class="form-input" placeholder="rahul@jcboseust.ac.in" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newStudentCollege" class="form-label">College:</label>
+              <input type="text" id="newStudentCollege" class="form-input" value="J.C. Bose UST, YMCA Faridabad" required>
+            </div>
+            <div class="form-group">
+              <label for="newStudentBranch" class="form-label">Branch:</label>
+              <input type="text" id="newStudentBranch" class="form-input" placeholder="Computer Engineering" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newStudentYear" class="form-label">Year:</label>
+              <select id="newStudentYear" class="form-select">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year" selected>3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="newStudentAvailability" class="form-label">Availability:</label>
+              <input type="text" id="newStudentAvailability" class="form-input" value="Evenings (6:00 PM - 8:00 PM)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills to Teach (Up to 2):</label>
+            <div class="form-row">
+              <input type="text" id="newStudentTeach1" class="form-input" placeholder="Skill 1 (e.g. Flutter)" required>
+              <input type="text" id="newStudentTeach2" class="form-input" placeholder="Skill 2 (Optional)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills to Learn (Up to 2):</label>
+            <div class="form-row">
+              <input type="text" id="newStudentLearn1" class="form-input" placeholder="Skill 1 (e.g. Python)" required>
+              <input type="text" id="newStudentLearn2" class="form-input" placeholder="Skill 2 (Optional)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="newStudentBio" class="form-label">Short Bio:</label>
+            <textarea id="newStudentBio" class="form-textarea" rows="2" placeholder="Student profile description..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="PeerPathAdmin.closeAddStudentModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive"></div>
+
+  <!-- Modular Scripts adhering to Synopsis Chapter 2.1 & 2.4 -->
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/discovery.js"></script>
+  <script src="js/sessions.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/rating.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

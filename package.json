@@ -1,13 +1,21 @@
 {
-  "name": "peerpath-root",
-  "private": true,
+  "name": "peerpath-capstone",
   "version": "1.0.0",
-  "type": "module",
+  "description": "PeerPath – A Campus Peer Skill-Exchange Platform (B.Tech Capstone Project)",
+  "author": "Inderpal Singh (25001011020), J.C. Bose UST, YMCA Faridabad",
   "scripts": {
-    "dev": "concurrently \"npm --prefix frontend run dev\" \"npm --prefix backend run dev\"",
-    "install-all": "npm install && npm --prefix frontend install && npm --prefix backend install"
+    "start": "npx -y serve . -l 3000",
+    "dev": "npx -y serve . -l 3000",
+    "serve": "npx -y http-server . -p 3000 -c-1"
   },
-  "dependencies": {
-    "concurrently": "^9.2.1"
-  }
+  "keywords": [
+    "peer-to-peer",
+    "skill-exchange",
+    "campus",
+    "vanilla-js",
+    "localStorage",
+    "jitsi-meet",
+    "capstone-project"
+  ],
+  "license": "MIT"
 }
