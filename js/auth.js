@@ -25,6 +25,12 @@ const PeerPathAuth = {
     if (authContainer) authContainer.style.display = 'flex';
     if (appContainer) appContainer.style.display = 'none';
 
+    // Clear password and errors
+    const pwdInput = document.getElementById('loginPassword');
+    if (pwdInput) pwdInput.value = '';
+    const errBox = document.getElementById('loginErrorBox');
+    if (errBox) errBox.style.display = 'none';
+
     this.renderPendingRequestsNotice();
   },
 
@@ -81,10 +87,10 @@ const PeerPathAuth = {
     if (roleBadgeEl) {
       if (currentUser.isAdmin) {
         roleBadgeEl.textContent = 'Admin Moderator';
-        roleBadgeEl.className = 'badge badge-admin';
+        roleBadgeEl.className = 'user-badge-role badge-admin';
       } else {
         roleBadgeEl.textContent = `${currentUser.branch} • ${currentUser.year}`;
-        roleBadgeEl.className = 'badge badge-student';
+        roleBadgeEl.className = 'user-badge-role';
       }
     }
 
@@ -365,6 +371,8 @@ const PeerPathAuth = {
   },
 
   quickDemoLogin(email, password) {
+    const tabSignIn = document.getElementById('authTabSignIn');
+    if (tabSignIn) tabSignIn.click();
     document.getElementById('loginEmail').value = email;
     document.getElementById('loginPassword').value = password;
     this.handleLogin();
@@ -387,12 +395,14 @@ const PeerPathAuth = {
     document.getElementById('editBio').value = user.bio || '';
 
     // Skills to teach (up to 2)
-    document.getElementById('editSkillTeach1').value = user.skillsTeach[0] || '';
-    document.getElementById('editSkillTeach2').value = user.skillsTeach[1] || '';
+    const teach = user.skillsTeach || [];
+    const learn = user.skillsLearn || [];
+    document.getElementById('editSkillTeach1').value = teach[0] || '';
+    document.getElementById('editSkillTeach2').value = teach[1] || '';
 
     // Skills to learn (up to 2)
-    document.getElementById('editSkillLearn1').value = user.skillsLearn[0] || '';
-    document.getElementById('editSkillLearn2').value = user.skillsLearn[1] || '';
+    document.getElementById('editSkillLearn1').value = learn[0] || '';
+    document.getElementById('editSkillLearn2').value = learn[1] || '';
 
     document.getElementById('editProfileModal').classList.add('active');
   },

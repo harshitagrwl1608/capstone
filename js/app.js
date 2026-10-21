@@ -94,9 +94,11 @@ const PeerPathApp = {
     const navButtons = document.querySelectorAll('.nav-tab-btn');
     navButtons.forEach(btn => {
       if (btn.dataset.tab === tabName) {
-        btn.classList.add('nav-active');
+        btn.classList.add('nav-active', 'tab-active');
+        btn.setAttribute('aria-selected', 'true');
       } else {
-        btn.classList.remove('nav-active');
+        btn.classList.remove('nav-active', 'tab-active');
+        btn.setAttribute('aria-selected', 'false');
       }
     });
 

@@ -45,7 +45,7 @@ const PeerPathChat = {
     this.activeSessionId = sessionId;
 
     const currentUser = PeerPathData.getActiveUser();
-    const isRequester = session.requesterId === currentUser.id;
+    const isRequester = currentUser && session.requesterId === currentUser.id;
     const partnerId = isRequester ? session.targetId : session.requesterId;
     const partnerName = isRequester ? session.targetName : session.requesterName;
     const partner = PeerPathData.getUserById(partnerId);
@@ -109,7 +109,7 @@ const PeerPathChat = {
     }
 
     container.innerHTML = messages.map(msg => {
-      const isMine = msg.senderId === currentUser.id;
+      const isMine = currentUser && msg.senderId === currentUser.id;
       const formattedTime = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
       return `
@@ -136,6 +136,10 @@ const PeerPathChat = {
     if (!text) return;
 
     const currentUser = PeerPathData.getActiveUser();
+    if (!currentUser) {
+      PeerPathApp.showToast('Please sign in to send messages.', 'warning');
+      return;
+    }
 
     PeerPathData.addMessageToSession(this.activeSessionId, {
       senderId: currentUser.id,

@@ -78,7 +78,12 @@ const PeerPathSessions = {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateStr = tomorrow.toISOString().split('T')[0];
-    document.getElementById('requestDateInput').value = dateStr;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('requestDateInput');
+    if (dateInput) {
+      dateInput.value = dateStr;
+      dateInput.min = todayStr;
+    }
     document.getElementById('requestTimeInput').value = '17:00';
     document.getElementById('requestNoteInput').value = `Hi ${peer.name}, I would love to connect for a 1-hour peer exchange session!`;
 
@@ -206,6 +211,13 @@ const PeerPathSessions = {
     if (!container) return;
 
     const currentUser = PeerPathData.getActiveUser();
+    if (!currentUser) {
+      container.innerHTML = '';
+      if (emptyState) emptyState.style.display = 'block';
+      this.updateTabCounts([]);
+      return;
+    }
+
     const allSessions = PeerPathData.getSessions();
 
     // Filter sessions relevant to the active user (or all if admin)

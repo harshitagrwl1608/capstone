@@ -331,6 +331,7 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 4px;
+  flex-wrap: wrap;
 }
 
 .nav-tab-btn {
@@ -354,7 +355,8 @@ a:hover {
   color: var(--text-main);
 }
 
-.nav-tab-btn.nav-active {
+.nav-tab-btn.nav-active,
+.nav-tab-btn.tab-active {
   background: var(--primary-light);
   color: var(--primary);
   font-weight: 600;

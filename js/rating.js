@@ -95,7 +95,7 @@ const PeerPathRating = {
     const session = PeerPathData.getSessionById(this.activeSessionId);
     const peer = PeerPathData.getUserById(this.activePeerId);
 
-    if (!session || !peer) return;
+    if (!session || !peer || !currentUser) return;
 
     const score = this.selectedScore;
     const comment = document.getElementById('ratingCommentInput').value.trim();
@@ -103,9 +103,15 @@ const PeerPathRating = {
     // 1. Update session record
     const isRequester = session.requesterId === currentUser.id;
     if (isRequester) {
-      PeerPathData.updateSession(this.activeSessionId, { ratingByRequester: score });
+      PeerPathData.updateSession(this.activeSessionId, { 
+        ratingByRequester: score,
+        reviewByRequester: comment || null
+      });
     } else {
-      PeerPathData.updateSession(this.activeSessionId, { ratingByTarget: score });
+      PeerPathData.updateSession(this.activeSessionId, { 
+        ratingByTarget: score,
+        reviewByTarget: comment || null
+      });
     }
 
     // 2. Update peer's running average rating

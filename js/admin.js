@@ -202,7 +202,7 @@ const PeerPathAdmin = {
               <button class="btn btn-outline btn-xs" onclick="PeerPathDiscovery.openPeerDetailsModal('${user.id}')">
                 Profile
               </button>
-              <button class="btn btn-danger btn-xs" onclick="PeerPathAdmin.removeUser('${user.id}', '${user.name.replace(/'/g, "\\'")}')">
+              <button class="btn btn-danger btn-xs" onclick="PeerPathAdmin.removeUser('${user.id}')">
                 Remove
               </button>
             </div>
@@ -212,7 +212,9 @@ const PeerPathAdmin = {
     }).join('');
   },
 
-  removeUser(userId, userName) {
+  removeUser(userId) {
+    const user = PeerPathData.getUserById(userId);
+    const userName = user ? user.name : 'this student';
     if (confirm(`ADMIN ACTION: Are you sure you want to remove ${userName}'s profile from the campus network?`)) {
       PeerPathData.deleteUser(userId);
       this.renderMetrics();
