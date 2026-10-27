@@ -144,38 +144,13 @@ const PeerPathSessions = {
   },
 
   acceptSession(sessionId) {
-    const session = PeerPathData.getSessionById(sessionId);
-    if (!session) return;
-
-    // Transition to confirmed
-    PeerPathData.updateSession(sessionId, { status: 'confirmed' });
-
-    // Send an automated greeting in chat
-    const currentUser = PeerPathData.getActiveUser();
-    PeerPathData.addMessageToSession(sessionId, {
-      senderId: currentUser.id,
-      senderName: currentUser.name,
-      text: `Hello! I have accepted the session request for ${session.skill}. Let's connect over the video link at the scheduled time!`
-    });
-
-    PeerPathAuth.updateNotificationBadge();
-    PeerPathAuth.checkPendingAlert();
-    this.renderSessions();
-
-    PeerPathApp.showToast(`Session with ${session.requesterName} is now CONFIRMED! Video room is ready.`, 'success');
+    // In Progress (Phase 2): Acceptance workflow logic under development
+    return;
   },
 
   declineSession(sessionId) {
-    const session = PeerPathData.getSessionById(sessionId);
-    if (!session) return;
-
-    if (confirm(`Are you sure you want to decline this session request for ${session.skill}?`)) {
-      PeerPathData.deleteSession(sessionId);
-      PeerPathAuth.updateNotificationBadge();
-      PeerPathAuth.checkPendingAlert();
-      this.renderSessions();
-      PeerPathApp.showToast('Session request declined and removed.', 'info');
-    }
+    // In Progress (Phase 2): Decline workflow logic under development
+    return;
   },
 
   markCompleted(sessionId) {
@@ -184,7 +159,6 @@ const PeerPathSessions = {
 
     PeerPathData.updateSession(sessionId, { status: 'completed' });
     this.renderSessions();
-    PeerPathApp.showToast('Session marked as completed! Please take a moment to rate your peer.', 'success');
 
     // Determine who the peer is
     const currentUser = PeerPathData.getActiveUser();
@@ -196,13 +170,8 @@ const PeerPathSessions = {
   },
 
   joinVideoCall(meetingUrl, skillName) {
-    // Open Jitsi Meet in new tab
-    if (!meetingUrl) {
-      PeerPathApp.showToast('Meeting link unavailable.', 'error');
-      return;
-    }
-    window.open(meetingUrl, '_blank', 'noopener,noreferrer');
-    PeerPathApp.showToast(`Opening Jitsi Video Room for "${skillName}"...`, 'info');
+    // In Progress (Phase 2): Jitsi Meet WebRTC integration under development
+    return;
   },
 
   renderSessions() {

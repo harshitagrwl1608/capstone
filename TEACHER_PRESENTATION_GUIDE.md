@@ -93,44 +93,39 @@ Follow this exact sequence during your live presentation to deliver a smooth, co
 - **What to say:**  
   *"The request is now in 'Pending' status. Inderpal is waiting for Aarav to review and accept the session."*
 
-### Step 6: Log In as Aarav Sharma & Accept the Request
+### Step 6: Log In as Aarav Sharma & Review Session Request
 - Click **Logout** in the top navbar.
 - On the login screen, click **`Aarav Sharma (Student)`** (`aarav.ce@jcboseust.ac.in` / `peerpath123`) and sign in.
 - Notice the **yellow notification alert banner** below the navbar:  
   *"Incoming Session Request: Inderpal Singh requested a 1-hour exchange for React.js."*
 - Navigate to **My Sessions &rarr; Pending**.
-- Click **`✓ Accept Request`**.
-- **What to say:**  
-  *"Aarav receives the request and accepts it. The session moves from Pending to Confirmed & Ready."*
+- Show the incoming request card and the action buttons (`✓ Accept Request` and `✕ Decline`).
+- **What to say (Matching Progress Report):**  
+  *"Here is the session request module we outlined. Inderpal's request appears under Aarav's pending list. As noted under Tasks in Progress on our 1st/2nd Progress Report, the backend session acceptance pipeline and scheduling automation are currently under active development."*
 
-### Step 7: Show Jitsi Video Call & In-Session Chat
-- On the confirmed session card:
-  1. Click **`💬 Open Chat`**. Type: *"Hi Inderpal, excited for our session. I'll cover component state and props!"* and click **Send**.
+### Step 7: Demonstrate In-Session Chat & Jitsi Video Call UI (Tasks in Progress)
+- Open a confirmed session card to showcase the UI design:
+  1. Click **`💬 Open Chat`** to show the chat modal layout, message container, and input form.
   2. Point out the **`🎥 Join Video Call (Jitsi)`** button.
-- **What to say:**  
-  *"Once confirmed, PeerPath provisions a free, zero-login Jitsi Meet video room (`meet.jit.si`) specifically for this session ID, enabling instant face-to-face mentorship alongside persistent in-session chat."*
+- **What to say (Matching Progress Report):**  
+  *"As detailed in our progress report under 'Tasks in Progress', we have designed the complete frontend interface for both real-time in-session chat and the Jitsi Meet video integration. The WebRTC room generation and persistent message sync are the core focus of our next implementation milestone."*
 
-### Step 8: Mark Completed & Submit 1–5 Star Rating
-- Click **`✓ Mark Completed`**.
-- The **Rate Your Peer Exchange** modal appears.
-- Select **5 Stars**, write a review (*"Excellent peer mentor, clarified React hooks quickly!"*), and click **Submit Verified Rating**.
-- **What to say:**  
-  *"Both participants submit a rating. The system recalculates the mentor's running weighted average score and updates their public reputation on campus."*
+### Step 8: Demonstrate Rating Module (Tasks in Progress)
+- Show the **Rate Your Peer Exchange** modal:
+  - Demonstrate the interactive 1–5 star selection interface.
+  - Show the feedback textarea and score descriptors.
+- **What to say (Matching Progress Report):**  
+  *"The peer evaluation modal and star-rating UI are prepared. In our upcoming sprint, we are finalizing the running average formula calculation and storing verified feedback directly into student profiles."*
 
-### Step 9: Log In as Admin Moderator & Approve Self-Registrations
+### Step 9: Show Admin Dashboard & Moderation Interface (Tasks in Progress)
 - Click **Logout**. Click **`🛡️ Admin Moderator`** (`admin@peerpath.edu` / `admin123`) and sign in.
 - The **Admin Panel** tab unlocks in the navbar!
-- Highlight the three sections:
-  1. **Platform Metrics:** Total Registered Students, Pending Registrations, Total Sessions, Confirmed Calls, Platform Average Rating.
-  2. **Pending Campus Registration Requests:** Point out pending student submissions (e.g. *Vikram Malhotra* or *Ritu Sen*). Click **`✓ Approve`** to activate the account.
-  3. **Campus Students Directory:** Show the full roster and point out the **`Remove`** button for moderating or banning problematic users.
-- **What to say:**  
-  *"The campus Administrator maintains complete governance: vetting registration requests, observing engagement metrics, and moderating accounts."*
-
-### Step 10: Presentation Safety Reset (Footer Link)
-- Point to the discrete link in the footer: `↺ Reset Demo State`.
-- **What to say:**  
-  *"If needed during testing or repeated evaluations, the platform includes a one-click reset to restore the sample campus dataset."*
+- Highlight the sections:
+  1. **Platform Metrics:** Total Registered Students, Total Sessions, Unique Skills.
+  2. **Pending Campus Registration Requests:** Show the table layout with pending students (*Vikram Malhotra*, *Ritu Sen*).
+  3. **Campus Students Directory:** Show the roster view.
+- **What to say (Matching Progress Report):**  
+  *"The basic Admin Dashboard layout and metrics interface are built. The server-side registration approval pipeline and account moderation actions are our final milestone deliverables before project submission."*
 
 ---
 

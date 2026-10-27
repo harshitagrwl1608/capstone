@@ -89,49 +89,9 @@ const PeerPathRating = {
   },
 
   submitRating() {
-    if (!this.activeSessionId || !this.activePeerId) return;
-
-    const currentUser = PeerPathData.getActiveUser();
-    const session = PeerPathData.getSessionById(this.activeSessionId);
-    const peer = PeerPathData.getUserById(this.activePeerId);
-
-    if (!session || !peer || !currentUser) return;
-
-    const score = this.selectedScore;
-    const comment = document.getElementById('ratingCommentInput').value.trim();
-
-    // 1. Update session record
-    const isRequester = session.requesterId === currentUser.id;
-    if (isRequester) {
-      PeerPathData.updateSession(this.activeSessionId, { 
-        ratingByRequester: score,
-        reviewByRequester: comment || null
-      });
-    } else {
-      PeerPathData.updateSession(this.activeSessionId, { 
-        ratingByTarget: score,
-        reviewByTarget: comment || null
-      });
-    }
-
-    // 2. Update peer's running average rating
-    const currentRating = peer.rating || 5.0;
-    const currentCount = peer.totalRatings || 0;
-    const newCount = currentCount + 1;
-    const newAverage = ((currentRating * currentCount) + score) / newCount;
-
-    PeerPathData.updateUser(this.activePeerId, {
-      rating: parseFloat(newAverage.toFixed(2)),
-      totalRatings: newCount
-    });
-
+    // In Progress (Phase 2): Rating calculation and persistent evaluation engine under development
     this.closeModal();
-
-    PeerPathApp.showToast(`Thank you! Your ${score}-star rating for ${peer.name} has been recorded.`, 'success');
-
-    // Refresh displays
-    PeerPathSessions.renderSessions();
-    PeerPathDiscovery.renderFeed();
+    return;
   }
 };
 

@@ -132,27 +132,13 @@ const PeerPathAdmin = {
   },
 
   approveRegistration(requestId) {
-    const newUser = PeerPathData.approveRegistrationRequest(requestId);
-    if (newUser) {
-      PeerPathApp.showToast(`Registration for "${newUser.name}" APPROVED! The student can now log in.`, 'success');
-      this.renderMetrics();
-      this.renderRegistrationRequestsTable();
-      this.renderUsersTable();
-      PeerPathAuth.checkPendingAlert();
-    }
+    // In Progress (Phase 2): Registration approval processing under development
+    return;
   },
 
   rejectRegistration(requestId) {
-    const reason = prompt('Enter a reason for rejecting this registration request (optional):', 'Campus verification failed');
-    if (reason !== null) {
-      const req = PeerPathData.rejectRegistrationRequest(requestId, reason);
-      if (req) {
-        PeerPathApp.showToast(`Registration request for "${req.name}" declined.`, 'info');
-        this.renderMetrics();
-        this.renderRegistrationRequestsTable();
-        PeerPathAuth.checkPendingAlert();
-      }
-    }
+    // In Progress (Phase 2): Registration rejection processing under development
+    return;
   },
 
   renderUsersTable() {
@@ -213,14 +199,8 @@ const PeerPathAdmin = {
   },
 
   removeUser(userId) {
-    const user = PeerPathData.getUserById(userId);
-    const userName = user ? user.name : 'this student';
-    if (confirm(`ADMIN ACTION: Are you sure you want to remove ${userName}'s profile from the campus network?`)) {
-      PeerPathData.deleteUser(userId);
-      this.renderMetrics();
-      this.renderUsersTable();
-      PeerPathApp.showToast(`User profile for "${userName}" was removed by administrator.`, 'info');
-    }
+    // In Progress (Phase 2): User moderation deletion under development
+    return;
   },
 
   openAddStudentModal() {
@@ -233,47 +213,9 @@ const PeerPathAdmin = {
 
   handleAddStudentSubmit(event) {
     event.preventDefault();
-    const name = document.getElementById('newStudentName').value.trim();
-    const college = document.getElementById('newStudentCollege').value.trim();
-    const branch = document.getElementById('newStudentBranch').value.trim();
-    const year = document.getElementById('newStudentYear').value;
-    const email = document.getElementById('newStudentEmail').value.trim();
-    const teach1 = document.getElementById('newStudentTeach1').value.trim();
-    const teach2 = document.getElementById('newStudentTeach2').value.trim();
-    const learn1 = document.getElementById('newStudentLearn1').value.trim();
-    const learn2 = document.getElementById('newStudentLearn2').value.trim();
-    const availability = document.getElementById('newStudentAvailability').value.trim();
-    const bio = document.getElementById('newStudentBio').value.trim();
-
-    const skillsTeach = [teach1, teach2].filter(Boolean);
-    const skillsLearn = [learn1, learn2].filter(Boolean);
-
-    if (!name || skillsTeach.length === 0 || skillsLearn.length === 0) {
-      PeerPathApp.showToast('Please specify student name and at least 1 skill to teach and learn.', 'warning');
-      return;
-    }
-
-    const colors = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-    PeerPathData.addUser({
-      name,
-      college,
-      branch,
-      year,
-      email,
-      password: 'peerpath123',
-      skillsTeach,
-      skillsLearn,
-      availability,
-      bio,
-      avatarColor: randomColor
-    });
-
+    // In Progress (Phase 2): Student addition logic under development
     this.closeAddStudentModal();
-    this.renderMetrics();
-    this.renderUsersTable();
-    PeerPathApp.showToast(`New student "${name}" added to campus roster!`, 'success');
+    return;
   }
 };
 

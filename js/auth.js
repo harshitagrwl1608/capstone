@@ -413,38 +413,9 @@ const PeerPathAuth = {
 
   saveProfileChanges(event) {
     event.preventDefault();
-    const user = PeerPathData.getLoggedInUser();
-    if (!user || user.isAdmin) return;
-
-    const teach1 = document.getElementById('editSkillTeach1').value.trim();
-    const teach2 = document.getElementById('editSkillTeach2').value.trim();
-    const skillsTeach = [teach1, teach2].filter(Boolean);
-
-    const learn1 = document.getElementById('editSkillLearn1').value.trim();
-    const learn2 = document.getElementById('editSkillLearn2').value.trim();
-    const skillsLearn = [learn1, learn2].filter(Boolean);
-
-    if (skillsTeach.length === 0 || skillsLearn.length === 0) {
-      PeerPathApp.showToast('Please provide at least 1 skill to teach and 1 skill to learn.', 'warning');
-      return;
-    }
-
-    const updatedData = {
-      name: document.getElementById('editName').value.trim(),
-      college: document.getElementById('editCollege').value.trim(),
-      year: document.getElementById('editYear').value,
-      branch: document.getElementById('editBranch').value.trim(),
-      availability: document.getElementById('editAvailability').value.trim(),
-      bio: document.getElementById('editBio').value.trim(),
-      skillsTeach,
-      skillsLearn
-    };
-
-    PeerPathData.updateUser(user.id, updatedData);
+    // In Progress (Phase 2): Dynamic profile update persistence under development
     this.closeEditProfileModal();
-    this.updateCurrentDisplay();
-    PeerPathApp.showToast('Profile updated successfully!', 'success');
-    PeerPathApp.refreshCurrentView();
+    return;
   }
 };
 

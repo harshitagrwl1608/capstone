@@ -128,31 +128,10 @@ const PeerPathChat = {
   },
 
   sendMessage() {
-    if (!this.activeSessionId) return;
-
+    // In Progress (Phase 2): Real-time chat transmission logic under development
     const input = document.getElementById('chatMessageInput');
-    const text = input ? input.value.trim() : '';
-
-    if (!text) return;
-
-    const currentUser = PeerPathData.getActiveUser();
-    if (!currentUser) {
-      PeerPathApp.showToast('Please sign in to send messages.', 'warning');
-      return;
-    }
-
-    PeerPathData.addMessageToSession(this.activeSessionId, {
-      senderId: currentUser.id,
-      senderName: currentUser.name,
-      text: text
-    });
-
     if (input) input.value = '';
-
-    this.renderMessages();
-
-    // Update session card display message counter if visible
-    PeerPathSessions.renderSessions();
+    return;
   },
 
   escapeHtml(str) {
